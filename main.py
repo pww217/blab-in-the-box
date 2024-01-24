@@ -42,7 +42,11 @@ def create_completion(model, messages, user_prompt_string):
 
 def render_response_stream(console, stream):
     full_response = []
-    with Live(Markdown("_Thinking..._"), console=console, auto_refresh=False) as live:
+    with Live(
+        Markdown(f"_{MODEL.title()} is thinking..._"),
+        console=console,
+        auto_refresh=False,
+    ) as live:
         console.print("~ Assistant ~")
         for segment in stream:
             text = segment["choices"][0]["text"]
@@ -54,7 +58,7 @@ def render_response_stream(console, stream):
 
 
 # Your chosen model, defined in config.json
-MODEL = "neuralbeagle"
+MODEL = "hermes"
 
 
 def main():
@@ -78,7 +82,7 @@ def main():
     )
 
     # Assemble the initial system prompt
-    messages = [f"{system_prompt_string}{instructions}\n"]
+    messages = [f"{system_prompt_string} {instructions}\n"]
 
     console = Console()  # Initiate console stream
     console.clear()  # Clear console before chat start
@@ -86,7 +90,7 @@ def main():
     while True:
         try:
             user_input = gather_user_input()
-            full_prompt = f"{user_prompt_string}\n{user_input}\n{bot_prompt_string}"
+            full_prompt = f"{user_prompt_string} {user_input}\n{bot_prompt_string} "
             console.print()
             messages.append(full_prompt)
 
@@ -95,15 +99,10 @@ def main():
             full_response = render_response_stream(console, stream)
 
             messages.append(f"{full_response}\n")  # Append new response to history
-            
-            # Writes to a file, although for now just as a debug tool
-            with open("chat.log", "a") as f:
-                f.write(f"{full_prompt}{full_response}")
-        
-        except KeyboardInterrupt:
-            print("\nOutput interrupted!\n")
-            continue
 
+        except KeyboardInterrupt:
+            print("\n[Received interrupt!]\n")
+            continue
 
 
 if __name__ == "__main__":
