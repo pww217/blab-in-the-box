@@ -1,0 +1,6 @@
+venv
+*.gguf
+models/
+*.log
+instructions.txt
+config.json
