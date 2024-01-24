@@ -1,6 +1,5 @@
-setup:
-	pip install -r requirements.txt
+run:
+	python main.py
 
-install-llama:
-	CMAKE_ARGS="-DLLAMA_METAL=on" FORCE_CMAKE=1 llm install llama-cpp-python
-	llm install llm-llama-cpp
+setup:
+  bash setup-macos-metal.sh
