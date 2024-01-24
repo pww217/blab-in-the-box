@@ -13,12 +13,10 @@ def load_config(file_path):
         return json.load(file)
 
 
-def parse_json(model_config):
-    model_file = model_config.get("file")
-    system_prompt_string = model_config.get("system_prompt_string")
-    user_prompt_string = model_config.get("user_prompt_string")
-    bot_prompt_string = model_config.get("bot_prompt_string")
-    return model_file, system_prompt_string, user_prompt_string, bot_prompt_string
+def parse_json(config):
+    model_config = config["models"][MODEL]
+    schema = config["schemas"].get(model_config["schema"])
+    return model_config, schema
 
 
 def gather_user_input():
@@ -58,28 +56,26 @@ def render_response_stream(console, stream):
 
 
 # Your chosen model, defined in config.json
-MODEL = "hermes"
+MODEL = "zephyr"
 
 
 def main():
-    model_config = load_config("config.json")["models"][MODEL]
-    (
-        model_file,
-        system_prompt_string,
-        user_prompt_string,
-        bot_prompt_string,
-    ) = parse_json(model_config)
+    config_json = load_config("config.json")
+    (model_config, schema) = parse_json(config_json)
 
     with open("instructions.txt") as f:
         instructions = f.read()
 
     model = Llama(
-        model_path=f"models/{model_file}",
+        model_path=f"models/{model_config['file']}",
         verbose=False,
         stream=True,
         n_gpu_layers=-1,
         n_ctx=0,
     )
+    system_prompt_string = schema["system_prompt_string"]
+    user_prompt_string = schema["user_prompt_string"]
+    bot_prompt_string = schema["bot_prompt_string"]
 
     # Assemble the initial system prompt
     messages = [f"{system_prompt_string} {instructions}\n"]
@@ -89,6 +85,7 @@ def main():
 
     while True:
         try:
+            print("".join(messages))
             user_input = gather_user_input()
             full_prompt = f"{user_prompt_string} {user_input}\n{bot_prompt_string} "
             console.print()
@@ -101,6 +98,7 @@ def main():
             messages.append(f"{full_response}\n")  # Append new response to history
 
         except KeyboardInterrupt:
+            messages.append(f"{full_response}\n")
             print("\n[Received interrupt!]\n")
             continue
 
