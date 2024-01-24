@@ -102,6 +102,9 @@ def main():
             print("\n[Received interrupt!]\n")
             continue
 
+        except Exception as e:
+            logging.error(f"Unexpected error: {e}")
+            continue
 
 if __name__ == "__main__":
     main()
