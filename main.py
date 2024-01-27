@@ -1,80 +1,27 @@
 import logging
-import json
 from llama_cpp import Llama
 from rich.console import Console
-from rich.live import Live
-from rich.markdown import Markdown
+from io import load_config, load_instructions, parse_json, gather_user_input
+from completions import configure_model, create_completion, render_response_stream
+
 
 logging.basicConfig(encoding="utf-8", level=logging.INFO)
 
 
-def load_config(file_path):
-    with open(file_path, "r") as file:
-        return json.load(file)
-
-
-def parse_json(config, selected_model):
-    model_config = config["models"][selected_model]
-    schema = config["schemas"].get(model_config["schema"])
-    return model_config, schema
-
-
-def gather_user_input():
-    user_input = input("~ User ~\n")
-    if user_input.lower() in ["exit", "q", "quit"]:
-        print("Goodbye!")
-        exit()
-    return user_input.strip()
-
-
-def create_completion(model, messages, user_prompt_string):
-    try:
-        stream = model.create_completion(
-            "".join(messages), stream=True, stop=[user_prompt_string], max_tokens=0
-        )
-        return stream
-    except Exception as e:
-        logging.error(f"Error during create_completion: {e}")
-        return None
-
-
-def render_response_stream(console, stream, selected_model):
-    full_response = []
-    with Live(
-        Markdown(f"_{selected_model.title()} is thinking..._"),
-        console=console,
-        auto_refresh=False,
-    ) as live:
-        console.print("~ Assistant ~")
-        for segment in stream:
-            text = segment["choices"][0]["text"]
-            full_response.append(text)
-            md = Markdown("".join(full_response))
-            live.update(md, refresh=True)
-    console.print()
-    return "".join(full_response)
-
-
 def main():
-    # Your chosen model, defined in config.json
     selected_model = "guanaco"
 
     config_json = load_config("config.json")
-    (model_config, schema) = parse_json(config_json, selected_model)
+    instructions = load_instructions("instructions.txt")
 
-    with open("instructions.txt") as f:
-        instructions = f.read()
-
-    model = Llama(
-        model_path=f"/Users/pwilson/lollms/lollms-webui/models/gguf/{model_config['file']}",
-        verbose=False,
-        stream=True,
-        n_gpu_layers=-1,
-        n_ctx=0,
-    )
-    system_prompt_string = schema["system_prompt_string"]
-    user_prompt_string = schema["user_prompt_string"]
-    bot_prompt_string = schema["bot_prompt_string"]
+    model_config, schema = parse_json(config_json)
+    (
+        model,
+        instructions,
+        system_prompt_string,
+        user_prompt_string,
+        bot_prompt_string,
+    ) = configure_model(selected_model, model_config, schema)
 
     # Assemble the initial system prompt
     messages = [f"{system_prompt_string} {instructions}\n"]
