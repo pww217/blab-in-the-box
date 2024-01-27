@@ -13,8 +13,8 @@ def load_config(file_path):
         return json.load(file)
 
 
-def parse_json(config):
-    model_config = config["models"][MODEL]
+def parse_json(config, selected_model):
+    model_config = config["models"][selected_model]
     schema = config["schemas"].get(model_config["schema"])
     return model_config, schema
 
@@ -38,10 +38,10 @@ def create_completion(model, messages, user_prompt_string):
         return None
 
 
-def render_response_stream(console, stream):
+def render_response_stream(console, stream, selected_model):
     full_response = []
     with Live(
-        Markdown(f"_{MODEL.title()} is thinking..._"),
+        Markdown(f"_{selected_model.title()} is thinking..._"),
         console=console,
         auto_refresh=False,
     ) as live:
@@ -55,19 +55,18 @@ def render_response_stream(console, stream):
     return "".join(full_response)
 
 
-# Your chosen model, defined in config.json
-MODEL = "zephyr"
-
-
 def main():
+    # Your chosen model, defined in config.json
+    selected_model = "guanaco"
+
     config_json = load_config("config.json")
-    (model_config, schema) = parse_json(config_json)
+    (model_config, schema) = parse_json(config_json, selected_model)
 
     with open("instructions.txt") as f:
         instructions = f.read()
 
     model = Llama(
-        model_path=f"models/{model_config['file']}",
+        model_path=f"/Users/pwilson/lollms/lollms-webui/models/gguf/{model_config['file']}",
         verbose=False,
         stream=True,
         n_gpu_layers=-1,
@@ -85,7 +84,7 @@ def main():
 
     while True:
         try:
-            print("".join(messages))
+            # print("".join(messages))
             user_input = gather_user_input()
             full_prompt = f"{user_prompt_string} {user_input}\n{bot_prompt_string} "
             console.print()
@@ -93,7 +92,7 @@ def main():
 
             # Start the stream and retrieve response
             stream = create_completion(model, messages, user_prompt_string)
-            full_response = render_response_stream(console, stream)
+            full_response = render_response_stream(console, stream, selected_model)
 
             messages.append(f"{full_response}\n")  # Append new response to history
 
@@ -105,6 +104,7 @@ def main():
         except Exception as e:
             logging.error(f"Unexpected error: {e}")
             continue
+
 
 if __name__ == "__main__":
     main()
