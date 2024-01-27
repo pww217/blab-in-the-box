@@ -16,6 +16,7 @@ def configure_model(selected_model, model_config, schema):
     system_prompt_string = schema["system_prompt_string"]
     user_prompt_string = schema["user_prompt_string"]
     bot_prompt_string = schema["bot_prompt_string"]
+    return model, system_prompt_string, user_prompt_string, bot_prompt_string
 
 
 def create_completion(model, messages, user_prompt_string):

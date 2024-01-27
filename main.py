@@ -1,7 +1,7 @@
 import logging
 from llama_cpp import Llama
 from rich.console import Console
-from io import load_config, load_instructions, parse_json, gather_user_input
+from iotasks import load_config, load_instructions, parse_json, gather_user_input
 from completions import configure_model, create_completion, render_response_stream
 
 
@@ -14,10 +14,9 @@ def main():
     config_json = load_config("config.json")
     instructions = load_instructions("instructions.txt")
 
-    model_config, schema = parse_json(config_json)
+    (model_config, schema) = parse_json(config_json, selected_model)
     (
         model,
-        instructions,
         system_prompt_string,
         user_prompt_string,
         bot_prompt_string,
