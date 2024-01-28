@@ -5,10 +5,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 from source.io import load_config, load_instructions, parse_json
-from source.completions import (
-    configure_model,
-    create_completion
-)
+from source.completions import configure_model, create_completion
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -60,7 +57,7 @@ async def websocket_endpoint(websocket: WebSocket):
             # md = Markdown(text)
             await websocket.send_text(text)
             await sleep(0.1)
-            # return text   
+            # return text
         messages.append(f"{full_response}\n")  # Append new response to history
 
 

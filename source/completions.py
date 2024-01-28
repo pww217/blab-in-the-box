@@ -8,6 +8,7 @@ from rich.markdown import Markdown
 def configure_model(model_config, schema):
     model = Llama(
         model_path=f"/Users/pwilson/lollms/lollms-webui/models/gguf/{model_config['file']}",
+        chat_format="chatml",
         verbose=False,
         stream=True,
         n_gpu_layers=-1,
@@ -21,8 +22,8 @@ def configure_model(model_config, schema):
 
 def create_completion(model, messages, user_prompt_string):
     try:
-        stream = model.create_completion(
-            "".join(messages), stream=True, stop=[user_prompt_string], max_tokens=0
+        stream = model.create_chat_completion(
+            messages, stream=True, stop=[user_prompt_string], max_tokens=0
         )
         return stream
     except Exception as e:
@@ -39,9 +40,10 @@ def render_cli_response_stream(console, stream, selected_model):
     ) as live:
         console.print("~ Assistant ~")
         for segment in stream:
-            text = segment["choices"][0]["text"]
-            full_response.append(text)
-            md = Markdown("".join(full_response))
-            live.update(md, refresh=True)
+            text = segment["choices"][0]["delta"].get("content")
+            if text != None:
+                full_response.append(text)
+                md = Markdown("".join(full_response))
+                live.update(md, refresh=True)
     console.print()
     return "".join(full_response)

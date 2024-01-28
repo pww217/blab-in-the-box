@@ -25,26 +25,29 @@ def main():
     ) = configure_model(model_config, schema)
 
     # Assemble the initial system prompt
-    messages = [f"{system_prompt_string} {instructions}\n"]
+    # messages = [f"{system_prompt_string} {instructions}\n"]
+
+    messages = [
+        {"role": "system", "content": f"{instructions}"},
+    ]
 
     console = Console()  # Initiate console stream
     console.clear()  # Clear console before chat start
 
     while True:
         try:
-            # print("".join(messages))
             user_input = gather_user_input()
-            full_prompt = f"{user_prompt_string} {user_input}\n{bot_prompt_string} "
+            user_input = {"role": "user", "content": f"{user_input}"}
             console.print()
-            messages.append(full_prompt)
+            messages.append(user_input)
 
             # Start the stream and retrieve response
             stream = create_completion(model, messages, user_prompt_string)
             full_response = render_cli_response_stream(
                 console, stream, config_json["selected_model"]
             )
-
-            messages.append(f"{full_response}\n")  # Append new response to history
+            # Append new response to history
+            messages.append({"role": "assistant", "content": f"{full_response}"})
 
         except KeyboardInterrupt:
             print("\n[Received interrupt!]\n")
