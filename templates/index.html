@@ -21,20 +21,26 @@
     </div>
 
     <script>
-      $(document).ready(function() {
-          $('#inputForm').submit(function(event) {
-              event.preventDefault();
-              $.ajax({
-                  type: 'POST',
-                  url: '/',
-                  data: $(this).serialize(),
-                  success: function(data) {
-                      $('#response').html(data.response);  // Ensure this targets the right element
-                  }
-              });
-          });
-      });
-  </script>
+        $(document).ready(function() {
+            $('#inputForm').submit(function(event) {
+                event.preventDefault();
+                const userInput = $('#userInput').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/completions',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ input: userInput }),
+                    success: function(data) {
+                        $('#response').text(data.response);  // Update the response div
+                    },
+                    error: function(err) {
+                        $('#response').text('Error: ' + err.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    
   
 </body>
 </html>

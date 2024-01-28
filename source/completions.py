@@ -5,7 +5,7 @@ from rich.live import Live
 from rich.markdown import Markdown
 
 
-def configure_model(selected_model, model_config, schema):
+def configure_model(model_config, schema):
     model = Llama(
         model_path=f"/Users/pwilson/lollms/lollms-webui/models/gguf/{model_config['file']}",
         verbose=False,

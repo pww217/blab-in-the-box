@@ -1,7 +1,12 @@
 import logging
 from rich.console import Console
+
 from source.io import load_config, load_instructions, parse_json, gather_user_input
-from source.completions import configure_model, create_completion, render_response_stream
+from source.completions import (
+    configure_model,
+    create_completion,
+    render_response_stream,
+)
 
 
 logging.basicConfig(encoding="utf-8", level=logging.INFO)
@@ -12,8 +17,8 @@ def main():
 
     config_json = load_config("config.json")
     instructions = load_instructions("instructions.txt")
-
     (model_config, schema) = parse_json(config_json, selected_model)
+    # Here we configurate and insantiate a model object
     (
         model,
         system_prompt_string,
@@ -42,7 +47,6 @@ def main():
             messages.append(f"{full_response}\n")  # Append new response to history
 
         except KeyboardInterrupt:
-            messages.append(f"{full_response}\n")
             print("\n[Received interrupt!]\n")
             continue
 

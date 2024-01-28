@@ -3,3 +3,4 @@ Flask
 fastapi
 uvicorn
 requests
+jinja2
