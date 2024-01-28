@@ -4,7 +4,6 @@ from rich.console import Console
 from source.io import (
     load_config,
     load_instructions,
-    parse_model_config,
     gather_user_input,
 )
 from source.completions import (
@@ -18,9 +17,8 @@ logging.basicConfig(encoding="utf-8", level=logging.INFO)
 
 
 def main():
-    config_json = load_config("config.json")
+    selected_model, model_config = load_config("config.json")
     instructions = load_instructions("instructions.txt")
-    model_config = parse_model_config(config_json)
 
     # Here we configurate and insantiate a model object
     model = configure_model(model_config)
@@ -37,13 +35,11 @@ def main():
             user_input = gather_user_input()
             user_input = {"role": "user", "content": f"{user_input}"}
             messages.append(user_input)
-            console.print()
+            print()
 
             # Start the stream and retrieve response
             stream = create_completion(model, messages)
-            full_response = render_cli_response_stream(
-                console, stream, config_json["selected_model"]
-            )
+            full_response = render_cli_response_stream(console, stream, selected_model)
             # Append new response to history
             messages.append({"role": "assistant", "content": f"{full_response}"})
 

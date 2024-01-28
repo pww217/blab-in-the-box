@@ -4,19 +4,15 @@ import json
 def load_config(file_path):
     with open(file_path, "r") as file:
         config = json.load(file)
-    return config
+    selected_model = config["selected_model"]
+    model_config = config["models"][selected_model]
+    return selected_model, model_config
 
 
 def load_instructions(file_path):
     with open(file_path) as f:
         instructions = f.read()
     return instructions
-
-
-def parse_model_config(config):
-    selected_model = config["selected_model"]
-    model_config = config["models"][selected_model]
-    return model_config
 
 
 def gather_user_input():
