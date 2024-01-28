@@ -2,5 +2,5 @@ venv
 *.gguf
 *.log
 instructions.txt
-config.json
-**__pycache__**
+__pycache__/
+source/__pycache__

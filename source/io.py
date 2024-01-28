@@ -8,16 +8,15 @@ def load_config(file_path):
 
 
 def load_instructions(file_path):
-    with open("instructions.txt") as f:
+    with open(file_path) as f:
         instructions = f.read()
     return instructions
 
 
-def parse_json(config):
+def parse_model_config(config):
     selected_model = config["selected_model"]
     model_config = config["models"][selected_model]
-    schema = config["schemas"].get(model_config["schema"])
-    return model_config, schema
+    return model_config
 
 
 def gather_user_input():

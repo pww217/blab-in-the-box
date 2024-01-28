@@ -5,25 +5,22 @@ from rich.live import Live
 from rich.markdown import Markdown
 
 
-def configure_model(model_config, schema):
+def configure_model(model_config):
     model = Llama(
         model_path=f"/Users/pwilson/lollms/lollms-webui/models/gguf/{model_config['file']}",
-        chat_format="chatml",
+        chat_format=model_config["chat_format"],
         verbose=False,
         stream=True,
         n_gpu_layers=-1,
         n_ctx=0,
     )
-    system_prompt_string = schema["system_prompt_string"]
-    user_prompt_string = schema["user_prompt_string"]
-    bot_prompt_string = schema["bot_prompt_string"]
-    return model, system_prompt_string, user_prompt_string, bot_prompt_string
+    return model
 
 
-def create_completion(model, messages, user_prompt_string):
+def create_completion(model, messages):
     try:
         stream = model.create_chat_completion(
-            messages, stream=True, stop=[user_prompt_string], max_tokens=0
+            messages, stream=True, max_tokens=0
         )
         return stream
     except Exception as e:
