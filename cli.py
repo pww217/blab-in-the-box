@@ -1,8 +1,7 @@
 import logging
-from llama_cpp import Llama
 from rich.console import Console
-from iotasks import load_config, load_instructions, parse_json, gather_user_input
-from completions import configure_model, create_completion, render_response_stream
+from source.io import load_config, load_instructions, parse_json, gather_user_input
+from source.completions import configure_model, create_completion, render_response_stream
 
 
 logging.basicConfig(encoding="utf-8", level=logging.INFO)
