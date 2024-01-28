@@ -13,7 +13,8 @@ def load_instructions(file_path):
     return instructions
 
 
-def parse_json(config, selected_model):
+def parse_json(config):
+    selected_model = config["selected_model"]
     model_config = config["models"][selected_model]
     schema = config["schemas"].get(model_config["schema"])
     return model_config, schema

@@ -1,9 +1,14 @@
-from fastapi import FastAPI, Request
+from asyncio import sleep
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from source.completions import configure_model, create_completion
+from source.io import load_config, load_instructions, parse_json
+from source.completions import (
+    configure_model,
+    create_completion
+)
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -17,6 +22,18 @@ class Response(BaseModel):
     response: str
 
 
+config_json = load_config("config.json")
+instructions = load_instructions("instructions.txt")
+(model_config, schema) = parse_json(config_json)
+# Here we configurate and insantiate a model object
+(
+    model,
+    system_prompt_string,
+    user_prompt_string,
+    bot_prompt_string,
+) = configure_model(model_config, schema)
+
+
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
     # Render an HTML template with request data
@@ -25,11 +42,26 @@ def read_root(request: Request):
     )
 
 
-@app.post("/api/completions", response_model=Response)
-async def process(input_model: Input):
-    user_input = input_model.input
-    processed_response = f"Processed: {user_input}"
-    return Response(response=processed_response)
+messages = [f"{system_prompt_string} {instructions}\n"]
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    full_response = []
+    while True:
+        user_input = await websocket.receive_text()
+        full_prompt = f"{user_prompt_string} {user_input}\n{bot_prompt_string} "
+        messages.append(full_prompt)
+        stream = create_completion(model, messages, user_prompt_string)
+        for segment in stream:
+            text = segment["choices"][0]["text"]
+            print(text, end="")
+            # md = Markdown(text)
+            await websocket.send_text(text)
+            await sleep(0.1)
+            # return text   
+        messages.append(f"{full_response}\n")  # Append new response to history
 
 
 if __name__ == "__main__":

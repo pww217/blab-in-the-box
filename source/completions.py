@@ -30,7 +30,7 @@ def create_completion(model, messages, user_prompt_string):
         return None
 
 
-def render_response_stream(console, stream, selected_model):
+def render_cli_response_stream(console, stream, selected_model):
     full_response = []
     with Live(
         Markdown(f"_{selected_model.title()} is thinking..._"),

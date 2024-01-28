@@ -20,26 +20,24 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <script>
-        $(document).ready(function() {
-            $('#inputForm').submit(function(event) {
-                event.preventDefault();
-                const userInput = $('#userInput').val();
-                $.ajax({
-                    type: 'POST',
-                    url: '/api/completions',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ input: userInput }),
-                    success: function(data) {
-                        $('#response').text(data.response);  // Update the response div
-                    },
-                    error: function(err) {
-                        $('#response').text('Error: ' + err.responseText);
-                    }
-                });
-            });
+        let socket = new WebSocket("ws://localhost:8000/ws");
+    
+        socket.onmessage = function(event) {
+            let message = event.data;
+            $('#response').append(message);  // Append each message to the response div
+        };
+    
+        $('#inputForm').submit(function(event) {
+            event.preventDefault();
+            const userInput = $('#userInput').val();
+            socket.send(userInput);  // Send user input to WebSocket
         });
     </script>
+    
+    
     
   
 </body>

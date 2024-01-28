@@ -1,6 +1,7 @@
 rich
-Flask
+
 fastapi
-uvicorn
+uvicorn[standard]
 requests
 jinja2
+websockets
