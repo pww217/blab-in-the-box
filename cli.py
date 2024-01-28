@@ -17,7 +17,7 @@ from source.completions import (
 logging.basicConfig(encoding="utf-8", level=logging.INFO)
 
 
-def main():
+def configure_parser():
     parser = argparse.ArgumentParser(
         description="CLI for interacting with an LLM chatbot."
     )
@@ -26,6 +26,11 @@ def main():
         "--file", help="File containing input for the chatbot", type=str
     )
     args = parser.parse_args()
+    return args
+
+
+def main():
+    args = configure_parser()
 
     selected_model, model_config = load_config("config.json")
     instructions = load_instructions("instructions.txt")
@@ -37,7 +42,7 @@ def main():
     if args.prompt:
         messages.append({"role": "user", "content": args.prompt})
         interactive_mode = False
-    elif args.file:
+    if args.file:
         try:
             with open(args.file, "r") as file:
                 file_content = file.read()
@@ -46,6 +51,7 @@ def main():
         except FileNotFoundError:
             print(f"Error: The file '{args.file}' was not found.")
             return
+    
 
     console = Console()
     if interactive_mode:
@@ -74,7 +80,7 @@ def main():
     else:
         stream = create_completion(model, messages)
         full_response = render_cli_response_stream(console, stream, selected_model)
-        print(full_response)  # Output to standard out
+        console.print(full_response)  # Output to standard out
 
 
 if __name__ == "__main__":
