@@ -19,9 +19,7 @@ def configure_model(model_config):
 
 def create_completion(model, messages):
     try:
-        stream = model.create_chat_completion(
-            messages, stream=True, max_tokens=0
-        )
+        stream = model.create_chat_completion(messages, stream=True, max_tokens=0)
         return stream
     except Exception as e:
         logging.error(f"Error during create_completion: {e}")
