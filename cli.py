@@ -32,12 +32,10 @@ def main():
 
     while True:
         try:
-            user_input = gather_user_input()
-            user_input = {"role": "user", "content": f"{user_input}"}
+            user_input = {"role": "user", "content": f"{gather_user_input()}"}
             messages.append(user_input)
             print()
 
-            # Start the stream and retrieve response
             stream = create_completion(model, messages)
             full_response = render_cli_response_stream(console, stream, selected_model)
             # Append new response to history

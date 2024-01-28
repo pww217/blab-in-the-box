@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from source.io import load_config, load_instructions, parse_json
+from source.io import load_config, load_instructions
 from source.completions import configure_model, create_completion
 
 app = FastAPI()
@@ -19,16 +19,15 @@ class Response(BaseModel):
     response: str
 
 
-config_json = load_config("config.json")
+selected_model, model_config = load_config("config.json")
 instructions = load_instructions("instructions.txt")
-(model_config, schema) = parse_json(config_json)
 # Here we configurate and insantiate a model object
 (
     model,
     system_prompt_string,
     user_prompt_string,
     bot_prompt_string,
-) = configure_model(model_config, schema)
+) = configure_model(model_config)
 
 
 @app.get("/", response_class=HTMLResponse)
