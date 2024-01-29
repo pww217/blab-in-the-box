@@ -1,9 +1,9 @@
 {
-  "selected_model": "neuralbeagle",
+  "selected_model": "dolphin",
   "models": {
     "hermes": {
       "file": "openhermes-2.5-mistral-7b.Q6_K.gguf",
-      "chat_format": "mistral"
+      "chat_format": "chatml"
     },
     "neuralbeagle": {
         "file": "neuralbeagle14-7b.Q5_K_M.gguf",
@@ -15,15 +15,11 @@
     },
     "mistral": {
         "file": "mistral-7b-v0.1.Q6_K.gguf",
-        "chat_format": "mistral"
+        "chat_format": "chatml"
     },
     "zephyr": {
         "file": "zephyr-7b-beta.Q6_K.gguf",
         "chat_format": "zephyr"
-    },
-    "stablecode": {
-        "file": "stable-code-3b.gguf",
-        "chat_format": "chatml"
     },
     "guanaco": {
         "file": "guanaco-13b-uncensored.Q5_K_S.gguf",
