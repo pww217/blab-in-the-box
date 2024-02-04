@@ -1,6 +1,7 @@
 import json
+from typing import Union, List, Dict, Tuple
 
-def load_config(file_path):
+def load_config(file_path: str) -> Tuple[str, Dict]:
     """
     Loads a configuration file at the specified path and returns the selected model and its
     configuration.
@@ -18,7 +19,7 @@ def load_config(file_path):
     return selected_model, model_config
 
 
-def load_instructions(file_path):
+def load_instructions(file_path: str) -> str:
     """
      Loads instructions from a file at the specified path and returns them as a string.
 
@@ -33,7 +34,7 @@ def load_instructions(file_path):
     return instructions
 
 
-def gather_user_input():
+def gather_user_input() -> Union[str, List[str]]:
     """
     Gathers user input and handles special cases like exit commands.
 
@@ -45,7 +46,7 @@ def gather_user_input():
         print("Goodbye!")
         exit()
     elif user_input.lower() in ["file"]:
-        filename = input(">> What is the file name?\n")
+        filename = input(">> What is the file path?\n")
         prompt = input(">> What would you like to ask about it? (Optional)\n")
         contents = f"{prompt}:\n\n```{read_user_file(filename)}\n```"
         return contents
@@ -53,7 +54,7 @@ def gather_user_input():
         return user_input.strip()
 
 
-def read_user_file(filename):
+def read_user_file(filename: str) -> str:
     """
     Reads the content of a file specified by the user and returns it as a string.
 

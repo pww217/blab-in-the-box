@@ -1,10 +1,11 @@
 import logging
+from typing import Union, List, Dict, Tuple
 from llama_cpp import Llama
 from rich.live import Live
 from rich.markdown import Markdown
 
 
-def configure_model(model_config):
+def configure_model(model_config: Dict) -> Llama:
     """
     Configure the Llama model with the given configuration.
 
@@ -25,7 +26,7 @@ def configure_model(model_config):
     return model
 
 
-def create_completion(model, messages):
+def create_completion(model: Llama, messages: List) -> Union[str, None]:
     """
     Create a chat completion using the given model and messages.
 
@@ -38,13 +39,14 @@ def create_completion(model, messages):
     """
     try:
         stream = model.create_chat_completion(messages, stream=True, max_tokens=0)
+        print(type(stream))
         return stream
     except Exception as e:
         logging.error(f"Error during create_completion: {e}")
         return None
 
 
-def render_cli_response_stream(console, stream, selected_model):
+def render_cli_response_stream(console, stream: Union[str, List], selected_model: str) -> str:
     """
     Render the chat completion stream in the console.
 

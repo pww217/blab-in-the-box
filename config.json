@@ -1,5 +1,5 @@
 {
-  "selected_model": "hermes",
+  "selected_model": "dolphin",
   "models": {
     "hermes": {
       "file": "openhermes-2.5-mistral-7b.Q6_K.gguf",
@@ -22,7 +22,7 @@
         "chat_format": "zephyr"
     },
     "guanaco": {
-        "file": "guanaco-13b-uncensored.Q5_K_S.gguf",
+        "file": "guanaco-13b.Q5_K_S.gguf",
         "chat_format": "chatml"
     }  
   }
