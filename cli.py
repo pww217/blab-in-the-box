@@ -60,7 +60,7 @@ def main():
             try:
                 user_input = {"role": "user", "content": f"{gather_user_input()}"}
                 messages.append(user_input)
-                print(messages)
+                # print(messages)
                 print()
 
                 stream = create_completion(model, messages)
@@ -69,6 +69,9 @@ def main():
                 )
                 # Append new response to history
                 messages.append({"role": "assistant", "content": f"{full_response}"})
+
+            except KeyboardInterrupt:
+                continue
 
             except Exception as e:
                 logging.error(f"Unexpected error: {e}")
