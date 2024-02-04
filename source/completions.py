@@ -63,7 +63,7 @@ def render_cli_response_stream(console, stream, selected_model):
             console=console,
             auto_refresh=False,
         ) as live:
-            console.print("~ Assistant ~")
+            console.print(">> Assistant")
             for segment in stream:
                 text = segment["choices"][0]["delta"].get("content")
                 if text != None:

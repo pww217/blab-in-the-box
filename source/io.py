@@ -16,7 +16,7 @@ def load_instructions(file_path):
 
 
 def gather_user_input():
-    user_input = input("~ User ~\n")
+    user_input = input(">> User\n")
     if user_input.lower() in ["exit", "q", "quit"]:
         print("Goodbye!")
         exit()

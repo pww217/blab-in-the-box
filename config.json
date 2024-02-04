@@ -1,5 +1,5 @@
 {
-  "selected_model": "dolphin6",
+  "selected_model": "dolphin",
   "models": {
     "hermes": {
       "file": "openhermes-2.5-mistral-7b.Q6_K.gguf",
@@ -9,14 +9,10 @@
         "file": "neuralbeagle14-7b.Q5_K_M.gguf",
         "chat_format": "chatml"
     },
-    "dolphin6": {
+    "dolphin": {
         "file": "dolphin-2.6-mistral-7b.Q5_K_M.gguf",
         "chat_format": "chatml"
     },
-    "dolphin5": {
-      "file": "dolphin-2.5-mixtral-8x7b.Q4_K_M.gguf",
-      "chat_format": "chatml"
-  },
     "mistral": {
         "file": "mistral-7b-v0.1.Q6_K.gguf",
         "chat_format": "chatml"
