@@ -1,11 +1,19 @@
 import logging
 from llama_cpp import Llama
-from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 
 
 def configure_model(model_config):
+    """
+    Configure the Llama model with the given configuration.
+
+    Args:
+        model_config (dict): A dictionary containing the model configuration.
+    
+    Returns:
+        Llama: The configured Llama model instance.
+    """
     model = Llama(
         model_path=f"/Users/pwilson/lollms/lollms-webui/models/gguf/{model_config['file']}",
         chat_format=model_config["chat_format"],
@@ -18,6 +26,16 @@ def configure_model(model_config):
 
 
 def create_completion(model, messages):
+    """
+    Create a chat completion using the given model and messages.
+
+    Args:
+        model (Llama): The configured Llama model instance.
+        messages (list): A list of messages to be used for creating the completion.
+
+    Returns:
+        str or None: The completed message, or None if an error occurs during creation.
+    """
     try:
         stream = model.create_chat_completion(messages, stream=True, max_tokens=0)
         return stream
@@ -27,18 +45,34 @@ def create_completion(model, messages):
 
 
 def render_cli_response_stream(console, stream, selected_model):
-    full_response = []
-    with Live(
-        Markdown(f"_{selected_model.title()} is thinking..._"),
-        console=console,
-        auto_refresh=False,
-    ) as live:
-        console.print("~ Assistant ~")
-        for segment in stream:
-            text = segment["choices"][0]["delta"].get("content")
-            if text != None:
-                full_response.append(text)
-                md = Markdown("".join(full_response))
-                live.update(md, refresh=True)
-    console.print()
-    return "".join(full_response)
+    """
+    Render the chat completion stream in the console.
+
+    Args:
+        console (rich.console.Console): The rich console instance.
+        stream (str or list): The chat completion stream to be rendered.
+        selected_model (Llama): The selected Llama model instance.
+
+    Returns:
+        str: The completed message as a string.
+    """
+    try:
+        full_response = []
+        with Live(
+            Markdown(f"_{selected_model.title()} is thinking..._"),
+            console=console,
+            auto_refresh=False,
+        ) as live:
+            console.print("~ Assistant ~")
+            for segment in stream:
+                text = segment["choices"][0]["delta"].get("content")
+                if text != None:
+                    full_response.append(text)
+                    md = Markdown("".join(full_response))
+                    live.update(md, refresh=True)
+        console.print()
+        return "".join(full_response)
+    except KeyboardInterrupt:
+        print("\n[Received interrupt!]\n")
+        # Here we still manage to append the partial response for context
+        return "".join(full_response)
