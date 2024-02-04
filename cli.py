@@ -60,7 +60,7 @@ def main():
             try:
                 user_input = {"role": "user", "content": f"{gather_user_input()}"}
                 messages.append(user_input)
-                print(messages)
+                # print(messages)
                 print()
 
                 stream = create_completion(model, messages)
