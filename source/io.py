@@ -1,7 +1,16 @@
 import json
 
-
 def load_config(file_path):
+    """
+    Loads a configuration file at the specified path and returns the selected model and its
+    configuration.
+
+    Args:
+        file_path (str): The path to the configuration file.
+
+    Returns:
+        tuple: A tuple containing the selected model name and its configuration.
+    """
     with open(file_path, "r") as file:
         config = json.load(file)
     selected_model = config["selected_model"]
@@ -10,12 +19,27 @@ def load_config(file_path):
 
 
 def load_instructions(file_path):
+    """
+     Loads instructions from a file at the specified path and returns them as a string.
+
+     Args:
+         file_path (str): The path to the instructions file.
+
+     Returns:
+         str: The contents of the instructions file.
+    """
     with open(file_path) as f:
         instructions = f.read()
     return instructions
 
 
 def gather_user_input():
+    """
+    Gathers user input and handles special cases like exit commands.
+
+    Returns:
+        str: The user's input, stripped of leading and trailing whitespace.
+    """
     user_input = input(">> User\n")
     if user_input.lower() in ["exit", "q", "quit"]:
         print("Goodbye!")
@@ -30,5 +54,14 @@ def gather_user_input():
 
 
 def read_user_file(filename):
+    """
+    Reads the content of a file specified by the user and returns it as a string.
+
+    Args:
+        filename (str): The path to the user-specified file.
+
+    Returns:
+        str: The contents of the user-specified file.
+    """
     with open(filename, "r") as f:
         return f.read()

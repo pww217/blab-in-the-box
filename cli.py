@@ -17,6 +17,15 @@ logging.basicConfig(encoding="utf-8", level=logging.INFO)
 
 
 def main():
+    """
+    The main function that runs the chatbot application.
+
+    Loads configuration and instructions, sets up the model, and enters a loop to interact with
+    the user.
+
+    Returns:
+        None
+    """
     selected_model, model_config = load_config("config.json")
     instructions = load_instructions("instructions.txt")
 

@@ -7,6 +7,10 @@ from pydantic import BaseModel
 from source.io import load_config, load_instructions
 from source.completions import configure_model, create_completion
 
+""""
+Doesn't work, may pick up again at some point.
+"""
+
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
