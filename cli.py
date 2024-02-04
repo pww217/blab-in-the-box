@@ -40,6 +40,7 @@ def main():
             messages.append({"role": "assistant", "content": f"{full_response}"})
 
         except KeyboardInterrupt:
+            print("\n[Received Interrupt!]\n")
             continue
 
         except Exception as e:
