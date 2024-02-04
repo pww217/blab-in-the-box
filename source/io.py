@@ -20,4 +20,14 @@ def gather_user_input():
     if user_input.lower() in ["exit", "q", "quit"]:
         print("Goodbye!")
         exit()
-    return user_input.strip()
+    elif user_input.lower() in ["file"]:
+        filename = input(">> What is the file name?\n")
+        prompt = input(">> What would you like to ask about it? (Optional)\n")
+        contents = f"{prompt}:\n\n```{read_user_file(filename)}\n```"
+        return contents
+    else:
+        return user_input.strip()
+
+def read_user_file(filename):
+    with open(filename, "r") as f:
+        return f.read()
