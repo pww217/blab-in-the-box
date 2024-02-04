@@ -10,7 +10,7 @@ def configure_model(model_config):
 
     Args:
         model_config (dict): A dictionary containing the model configuration.
-    
+
     Returns:
         Llama: The configured Llama model instance.
     """
