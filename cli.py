@@ -13,7 +13,9 @@ from source.completions import (
 )
 
 
-logging.basicConfig(encoding="utf-8", level=logging.INFO)
+logging.basicConfig(
+    encoding="utf-8", level=logging.INFO, format="%(levelname)s: %(message)s"
+)
 
 
 def main():
@@ -39,14 +41,15 @@ def main():
             user_input = {"role": "user", "content": f"{gather_user_input()}"}
             messages.append(user_input)
 
-            # import json
-            # print(json.dumps(messages, indent=2))
-            print()
+            import json
+            print(json.dumps(messages, indent=2))
+            console.print()
 
             stream = create_completion(model, messages)
             full_response = render_cli_response_stream(console, stream, selected_model)
             # Append new response to history
             messages.append({"role": "assistant", "content": f"{full_response}"})
+            console.print()
 
         except KeyboardInterrupt:
             print("\n[Received Interrupt!]\n")

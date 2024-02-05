@@ -1,5 +1,5 @@
 import logging
-from typing import Union, List, Dict, Tuple
+from typing import Union, List, Dict
 from llama_cpp import Llama
 from rich.live import Live
 from rich.markdown import Markdown
@@ -39,16 +39,17 @@ def create_completion(model: Llama, messages: List) -> Union[str, None]:
     """
     try:
         stream = model.create_chat_completion(messages, stream=True, max_tokens=0)
-        print(type(stream))
         return stream
     except Exception as e:
         logging.error(f"Error during create_completion: {e}")
         return None
 
 
-def render_cli_response_stream(console, stream: Union[str, List], selected_model: str) -> str:
+def render_cli_response_stream(
+    console, stream: Union[str, List], selected_model: str
+) -> str:
     """
-    Render the chat completion stream in the console.
+    Render the chat completion stream in the console in markdown.
 
     Args:
         console (rich.console.Console): The rich console instance.
@@ -58,13 +59,13 @@ def render_cli_response_stream(console, stream: Union[str, List], selected_model
     Returns:
         str: The completed message as a string.
     """
-    try:
-        full_response = []
-        with Live(
-            Markdown(f"_{selected_model.title()} is thinking..._"),
-            console=console,
-            auto_refresh=False,
-        ) as live:
+    with Live(
+        Markdown(f"*{selected_model.title()} is thinking...*"),
+        console=console,
+        auto_refresh=False,
+    ) as live:
+        try:
+            full_response = []
             console.print(">> Assistant")
             for segment in stream:
                 text = segment["choices"][0]["delta"].get("content")
@@ -72,9 +73,9 @@ def render_cli_response_stream(console, stream: Union[str, List], selected_model
                     full_response.append(text)
                     md = Markdown("".join(full_response))
                     live.update(md, refresh=True)
-        console.print()
-        return "".join(full_response)
-    except KeyboardInterrupt:
-        print("\n[Received interrupt!]\n")
-        # Here we still manage to append the partial response for context
-        return "".join(full_response)
+            return "".join(full_response)
+        except KeyboardInterrupt:
+            live.stop()
+            print("\n[Received interrupt!]\n")
+            # Here we still manage to append the partial response for context
+            return "".join(full_response)
