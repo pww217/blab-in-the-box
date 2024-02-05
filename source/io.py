@@ -1,5 +1,7 @@
 import json
 from typing import Union, List, Dict, Tuple
+from PyPDF2 import PdfReader
+
 
 def load_config(file_path: str) -> Tuple[str, Dict]:
     """
@@ -21,13 +23,13 @@ def load_config(file_path: str) -> Tuple[str, Dict]:
 
 def load_instructions(file_path: str) -> str:
     """
-     Loads instructions from a file at the specified path and returns them as a string.
+    Loads instructions from a file at the specified path and returns them as a string.
 
-     Args:
-         file_path (str): The path to the instructions file.
+    Args:
+        file_path (str): The path to the instructions file.
 
-     Returns:
-         str: The contents of the instructions file.
+    Returns:
+        str: The contents of the instructions file.
     """
     with open(file_path) as f:
         instructions = f.read()
@@ -45,10 +47,24 @@ def gather_user_input() -> Union[str, List[str]]:
     if user_input.lower() in ["exit", "q", "quit"]:
         print("Goodbye!")
         exit()
-    elif user_input.lower() in ["file"]:
-        filename = input(">> What is the file path?\n")
+    elif user_input.lower() in ["/text"]:
+        filename = input(">> What is the text file path?\n")
         prompt = input(">> What would you like to ask about it? (Optional)\n")
         contents = f"{prompt}:\n\n```{read_user_file(filename)}\n```"
+        return contents
+    elif user_input.lower() in ["/pdf"]:
+        filename = input(">> What is the pdf file path?\n")
+        pdf = PdfReader(filename)
+        prompt = input(">> What would you like to ask about it? (Optional)\n")
+        pages = pdf.pages
+        pdf_contents = ""
+        for i in pages:
+            i = i.extract_text()
+            print(i)
+            pdf_contents += i
+        pdf_contents = pdf_contents.replace("\n", " ")
+        # print(pdf_content)
+        contents = f"{prompt}:\n\n```{pdf_contents}\n```"
         return contents
     else:
         return user_input.strip()
