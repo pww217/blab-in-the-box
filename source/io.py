@@ -35,39 +35,6 @@ def load_instructions(file_path: str) -> str:
         instructions = f.read()
     return instructions
 
-
-def gather_user_input() -> Union[str, List[str]]:
-    """
-    Gathers user input and handles special cases like exit commands.
-
-    Returns:
-        str: The user's input, stripped of leading and trailing whitespace.
-    """
-    user_input = input(">> User\n")
-    if user_input.lower() in ["exit", "q", "quit"]:
-        print("Goodbye!")
-        exit()
-    elif user_input.lower() in ["/text"]:
-        filename = input(">> What is the text file path?\n")
-        prompt = input(">> What would you like to ask about it? (Optional)\n")
-        contents = f"{prompt}:\n\n```{read_user_file(filename)}\n```"
-        return contents
-    elif user_input.lower() in ["/pdf"]:
-        filename = input(">> What is the pdf file path?\n")
-        pdf = PdfReader(filename)
-        prompt = input(">> What would you like to ask about it? (Optional)\n")
-        pages = pdf.pages
-        pdf_contents = ""
-        for i in pages:
-            i = i.extract_text()
-            pdf_contents += i
-        pdf_contents = pdf_contents.replace("\n", " ")
-        contents = f"{prompt}:\n\n```{pdf_contents}\n```"
-        return contents
-    else:
-        return user_input.strip()
-
-
 def read_user_file(filename: str) -> str:
     """
     Reads the content of a file specified by the user and returns it as a string.
@@ -80,3 +47,46 @@ def read_user_file(filename: str) -> str:
     """
     with open(filename, "r") as f:
         return f.read()
+
+def read_pdf(filename:str) -> str:
+    """
+    Reads the content of a PDF file specified by the user and returns it as a string.
+
+    Args:
+        filename (str): The path to the user-specified PDF file.
+
+    Returns:
+        str: The contents of the user-specified PDF file.
+    """
+    pdf = PdfReader(filename) 
+    pages = pdf.pages
+    pdf_contents = ""
+    for i in pages:
+        i = i.extract_text()
+        pdf_contents += i
+    contents = pdf_contents.replace("\n", " ")
+    return contents
+
+def gather_user_input() -> Union[str, List[str]]:
+    """
+    Gathers user input and handles special cases like exit commands.
+
+    Returns:
+        str: The user's input, stripped of leading and trailing whitespace.
+    """
+    user_input = input(">> User\n")
+    if user_input.lower() in ["exit", "q", "quit"]:
+        print("Goodbye!")
+        exit()
+    elif user_input.lower() in ["/file"]:
+        filename = input(">> What is the text file path?\n")
+        prompt = input(">> What would you like to ask about it? (Optional)\n")
+        if filename.split(".")[-1] == ".pdf":
+            contents = f"{prompt}:\n\n{read_pdf(filename)}\n"
+        else: # Any regular text file
+            contents = f"{prompt}:\n\n{read_user_file(filename)}\n"
+        return contents
+
+    else:
+        return user_input.strip()
+
