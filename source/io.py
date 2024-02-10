@@ -60,10 +60,8 @@ def gather_user_input() -> Union[str, List[str]]:
         pdf_contents = ""
         for i in pages:
             i = i.extract_text()
-            print(i)
             pdf_contents += i
         pdf_contents = pdf_contents.replace("\n", " ")
-        # print(pdf_content)
         contents = f"{prompt}:\n\n```{pdf_contents}\n```"
         return contents
     else:

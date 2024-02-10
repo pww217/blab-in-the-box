@@ -41,8 +41,8 @@ def main():
             user_input = {"role": "user", "content": f"{gather_user_input()}"}
             messages.append(user_input)
 
-            import json
-            print(json.dumps(messages, indent=2))
+            # import json
+            # print(json.dumps(messages, indent=2))
             console.print()
 
             stream = create_completion(model, messages)
