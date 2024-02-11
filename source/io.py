@@ -39,6 +39,7 @@ def load_instructions(file_path: str) -> str:
     except:
         print("Failed to find an instructions.txt file.")
 
+
 def read_user_file(filename: str) -> str:
     """
     Reads the content of a file specified by the user and returns it as a string.
@@ -52,7 +53,8 @@ def read_user_file(filename: str) -> str:
     with open(filename, "r") as f:
         return f.read()
 
-def read_pdf(filename:str) -> str:
+
+def read_pdf(filename: str) -> str:
     """
     Reads the content of a PDF file specified by the user and returns it as a string.
 
@@ -62,7 +64,7 @@ def read_pdf(filename:str) -> str:
     Returns:
         str: The contents of the user-specified PDF file.
     """
-    pdf = PdfReader(filename) 
+    pdf = PdfReader(filename)
     pages = pdf.pages
     pdf_contents = ""
     for i in pages:
@@ -70,6 +72,7 @@ def read_pdf(filename:str) -> str:
         pdf_contents += i
     contents = pdf_contents.replace("\n", " ")
     return contents
+
 
 def gather_user_input() -> Union[str, List[str]]:
     """
@@ -88,10 +91,9 @@ def gather_user_input() -> Union[str, List[str]]:
         prompt = input(">> What would you like to ask about it? (Optional)\n")
         if filename.split(".")[-1] == "pdf":
             contents = f"{prompt}:\n\n{read_pdf(filename)}\n"
-        else: # Any other regular text file
+        else:  # Any other regular text file
             contents = f"{prompt}:\n\n{read_user_file(filename)}\n"
         return contents
 
     else:
         return user_input.strip()
-

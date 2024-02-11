@@ -1,5 +1,5 @@
 {
-  "selected_model": "hermes",
+  "selected_model": "dolphin",
   "models": {
     "hermes": {
       "file": "openhermes-2.5-mistral-7b.Q6_K.gguf",
