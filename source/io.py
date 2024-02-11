@@ -70,6 +70,7 @@ def read_pdf(filename:str) -> str:
 def gather_user_input() -> Union[str, List[str]]:
     """
     Gathers user input and handles special cases like exit commands.
+    Converts files to plaintext strings and appends the prompt above.
 
     Returns:
         str: The user's input, stripped of leading and trailing whitespace.
@@ -81,9 +82,10 @@ def gather_user_input() -> Union[str, List[str]]:
     elif user_input.lower() in ["/file"]:
         filename = input(">> What is the text file path?\n")
         prompt = input(">> What would you like to ask about it? (Optional)\n")
-        if filename.split(".")[-1] == ".pdf":
+        if filename.split(".")[-1] == "pdf":
+            print(filename.split(".")[-1])
             contents = f"{prompt}:\n\n{read_pdf(filename)}\n"
-        else: # Any regular text file
+        else: # Any other regular text file
             contents = f"{prompt}:\n\n{read_user_file(filename)}\n"
         return contents
 
