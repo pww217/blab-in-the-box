@@ -1,0 +1,2 @@
+run:
+	python cli.py

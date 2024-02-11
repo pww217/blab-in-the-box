@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Async Interaction</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form id="inputForm" class="input-group mb-3">
+                <input type="text" name="user_input" id="userInput" class="form-control" placeholder="Enter text">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+            <div id="response" class="alert alert-info"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        let socket = new WebSocket("ws://localhost:8000/ws");
+    
+        socket.onmessage = function(event) {
+            let message = event.data;
+            $('#response').append(message);  // Append each message to the response div
+        };
+    
+        $('#inputForm').submit(function(event) {
+            event.preventDefault();
+            const userInput = $('#userInput').val();
+            socket.send(userInput);  // Send user input to WebSocket
+        });
+    </script>
+    
+    
+    
+  
+</body>
+</html>

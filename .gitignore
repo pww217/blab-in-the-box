@@ -1,0 +1,7 @@
+venv
+*.gguf
+*.log
+instructions.txt
+__pycache__/
+source/__pycache__
+*.pdf
