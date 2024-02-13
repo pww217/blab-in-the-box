@@ -30,7 +30,7 @@ source venv/bin/activate
 
 2. Run `./setup-macos-metal.sh`
 
-### Configuration
+## Configuration
 
 Here is a example configuration block:
 
@@ -47,7 +47,11 @@ Here is a example configuration block:
 }
 ```
 
-### Usage
+## instructions.txt
+
+If you create an `instructions.txt` file as a regular text file and include some instructons of a system prompt, that will be ingested before any other inputs and act as a foundation for the conversation.
+
+## Usage
 
 After starting the chatbot, you can interact with it directly from the command line. The chatbot supports loading text from files, including PDFs, to provide context for the conversation.
 
